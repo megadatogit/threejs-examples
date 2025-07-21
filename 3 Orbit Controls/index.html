@@ -1,73 +1,77 @@
-<html>
+<html>  
 
-<head>
-    <meta charset=utf-8>
-    <title>Threejs Gogodev Ejemplo</title>
-    <style>
-        body {
-            margin: 0;
-        }
+<head>  
+    <meta charset=utf-8>  
+    <title>Three.js Example with GLB Model</title>  
+    <style>  
+        body {  
+            margin: 0;  
+            display: flex;  
+            justify-content: center; /* Para centrar el canvas horizontalmente */  
+            align-items: center; /* Para centrar el canvas verticalmente */  
+            height: 100vh; /* Ocupa toda la altura de la ventana */  
+        }  
 
-        canvas {
-            width: 100%;
-            height: 100%
-        }
-    </style>
-</head>
+        #canvas-container {  
+            width: 300px;  
+            height: 300px;  
+            overflow: hidden; /* Oculta el desbordamiento */  
+            position: relative; /* Para el posicionamiento del canvas */  
+        }  
 
-<body>
-    <script type="module">
-        import * as THREE from './three.module.js';
-        import { OrbitControls } from './orbitcontrols.js';
+        canvas {  
+            width: 100%; /* Asegura que el canvas ocupe todo el contenedor */  
+            height: 100%;  
+        }  
+    </style>  
+</head>  
 
-        var scene = new THREE.Scene();
-        var camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+<body>  
+    <div id="canvas-container">  
+        <script type="module">  
+            import * as THREE from './three.module.js';  
+            import { OrbitControls } from './orbitcontrols.js';  
+            import { GLTFLoader } from './three/examples/jsm/loaders/GLTFLoader.js'; // Importar el GLTFLoader  
 
-        var renderer = new THREE.WebGLRenderer({ alpha: true });
-        renderer.setSize(window.innerWidth, window.innerHeight);
-        renderer.shadowMap.enabled = true;
-        document.body.appendChild(renderer.domElement);
+            var scene = new THREE.Scene();  
+            var camera = new THREE.PerspectiveCamera(75, 300 / 300, 0.1, 1000);  
+            var renderer = new THREE.WebGLRenderer({ alpha: true });  
+            renderer.setSize(300, 300); // Tamaño del renderizador  
+            renderer.shadowMap.enabled = true;  
 
-        // CUBE
-        var geometry = new THREE.BoxGeometry(1, 1, 1);
-        var material = new THREE.MeshStandardMaterial({ color: 0x00ff00 });
-        var cube = new THREE.Mesh(geometry, material);
-        cube.castShadow = true;
-        cube.position.set(1,2,1);
-        scene.add(cube);
+            document.getElementById('canvas-container').appendChild(renderer.domElement); // Agregar el canvas al contenedor  
 
-        // LIGHT
-        var light = new THREE.DirectionalLight(0xffffff, 1, 10);
-        light.position.set(-1, 1, 1);
-        light.castShadow = true;
-        scene.add(light);
+            // LIGHT  
+            var light = new THREE.DirectionalLight(0xffffff, 1, 10);  
+            light.position.set(-1, 1, 1);  
+            light.castShadow = true;  
+            scene.add(light);  
 
-        // PLANE
-        var planeGeometry = new THREE.PlaneGeometry(20, 20, 32, 32);
-        var planeMaterial = new THREE.MeshStandardMaterial({ color: 0xff0000 });
-        var plane = new THREE.Mesh(planeGeometry, planeMaterial);
-        plane.receiveShadow = true;
-        plane.position.set(0, 0, 0);
-        scene.add(plane);
+            // GLB Model Load  
+            const loader = new GLTFLoader();  
+            loader.load('/3 Orbit Controls/heart_-_animated_anatomical_3d_model.glb', (gltf) => {  
+                scene.add(gltf.scene); // Agregar el modelo a la escena  
+                gltf.scene.position.set(0, 0, 0); // Ajustar la posición del modelo  
+                gltf.scene.scale.set(1, 1, 1); // Escalar si es necesario  
+            }, undefined, (error) => {  
+                console.error(error);  
+            });  
 
-        camera.position.z = 5;
-        camera.position.y = -3;
-        camera.rotation.x = .5;
+            camera.position.z = 5;  
+            camera.position.y = 1;  
+            camera.rotation.x = -0.5;  
 
-        const controls = new OrbitControls(camera, renderer.domElement);
-        // controls.enableZoom = false;
-       // controls.minDistance = 1;
-       // controls.maxDistance = 15;
-       //controls.screenSpacePanning = false;
-       controls.enableDamping = true;
-       controls.dampingFactor = 0.1;
+            const controls = new OrbitControls(camera, renderer.domElement);  
+            controls.enableDamping = true;  
+            controls.dampingFactor = 0.1;  
 
-        function render() {
-           /* cube.rotation.x += 0.01
-            cube.rotation.y += 0.01*/
-            requestAnimationFrame(render);
-            renderer.render(scene, camera);
-        }
-        render();
-    </script>
-</body>
+            function render() {  
+                requestAnimationFrame(render);  
+                renderer.render(scene, camera);  
+            }  
+            render();  
+        </script>  
+    </div>  
+</body>  
+
+</html>
