@@ -19,6 +19,22 @@ const data = [
   }
 ]
 
+function mostrarLibros(lista) {
+  const listaLibros = document.getElementById('listaLibros');
+  listaLibros.innerHTML = '';
+  lista.forEach(libro => {
+    const li = document.createElement('li');
+    li.innerHTML =`
+    <strong>titulo: </strong>${libro.titulo} <br/>
+    <strong>Año:    </strong>${libro.ano}    <br/>
+    <strong>ISBN:   </strong>${libro.isbn}   <br/>
+    <strong>Autor:  </strong>${libro.autor}  <br/>
+    `;
+    listaLibros.appendChild(li)
+  })
+}
+mostrarLibros(data)
+
 
 // resolve === para cuando ya se tengan lo requerdio (promesa resuelta)
 //  reject === para cuando hay fallas (promesa fallida)
@@ -32,7 +48,7 @@ function getData() {
         }
         else {
             setTimeout(() => {
-                resolve(data)
+                resolve(libros)
             }, 2000)
         }
     })
@@ -43,5 +59,5 @@ function getData() {
 // catch() ===  cuando la promesa fallo
 
 getData()
-    .then((response) => console.log(response))
+    .then((response) => {mostrarLibros(response)})
     .catch((err)=>console.log(err.message))
