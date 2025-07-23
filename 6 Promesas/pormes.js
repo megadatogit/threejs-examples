@@ -40,7 +40,7 @@ mostrarLibros(data)
 //  reject === para cuando hay fallas (promesa fallida)
 
 function getData() {
-    return new Promise((resolve, reject) => {
+    return new Promise((resolve, reject) => {6
         if (data.length===0) {
             reject(
                 new Error("datos no encontrados")
